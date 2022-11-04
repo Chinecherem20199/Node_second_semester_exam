@@ -5,7 +5,7 @@ const userRouter = express.Router();
 
 
 
-userRouter.post('/signup', passport.authenticate('signup', { session: false }), UserController.signUp)
+userRouter.post('/signup', passport.authenticate('signup', { session: false }), UserController.signUp);
 
 userRouter.post("/login", async (req, res, next) =>
   passport.authenticate("login", (err, user, info) => {
@@ -13,5 +13,22 @@ userRouter.post("/login", async (req, res, next) =>
   })(req, res, next)
 );
 
+//  userRouter.post("/login", async(req, res, next)=>{
+//   passport.authenticate("login", async(err, user, info)=>{
+//     try {
+//       if(err){
+//         return next(err)
+//       }
+//       if(!user){
+//         const error = new Error("Email or Password is incorrect");
+//         return next(error);
+//       }
+//       req.login(user, {session:false})
+//     } catch (error) {
+//       if(error) 
+//       return next(error)
+//     }
+    
+//   })})
 
-module.exports = userRouter;
+ module.exports = userRouter;

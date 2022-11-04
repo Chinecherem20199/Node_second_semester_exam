@@ -16,11 +16,11 @@ const app = express();
 
 // app.use(BasicAuth);
 
- app.use(bodyParser.urlencoded({ extended: false }));
+//  app.use(bodyParser.urlencoded({ extended: false }));
 // app.use('/', authRoute);
 app.use(express.json());
 
-app.use('/', blogsRoute);
+app.use('/blogs', blogsRoute);
 app.use('/', userRoute);
 
 

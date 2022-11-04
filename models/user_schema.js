@@ -1,12 +1,12 @@
-const moogoose = require('mongoose');
-const bcrypt = require('bcrypt');
+// const moogoose = require('mongoose');
+const moogoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 //Define a schema
 const Schema = moogoose.Schema;
 
 //Define book schema
 const UserSchema = new Schema({
-  id: moogoose.Schema.Types.ObjectId,
   email: {
     type: String,
     required: [true, "your email is required"],
@@ -14,19 +14,26 @@ const UserSchema = new Schema({
   },
   firstname: {
     type: String,
-    //  required: true
+    required: true,
   },
   lastname: {
     type: String,
-    // required: true,
+    required: true,
     max: [2022, "Year must be less than or equal to 2020"], //validation with custom message
   },
   password: {
     type: String,
-    // required: true,
-    //validation with custom message
   },
-  timestamps: Date,
+  created_at: {
+    type: Date,
+    default: Date.now(),
+  },
+  blog: [
+    {
+      type: moogoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 
@@ -49,5 +56,6 @@ UserSchema.methods.isValidPassword = async function(password) {
 
   return compare;
 }
+const User = moogoose.model("User", UserSchema); //I added this.
 // Export the model
-module.exports = moogoose.model('User', UserSchema);
+module.exports = User;

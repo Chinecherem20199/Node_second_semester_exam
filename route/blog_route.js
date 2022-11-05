@@ -10,7 +10,7 @@ blogRouter.get("/:id", BlogController.getBlog);
 
 blogRouter.post("/", passport.authenticate("jwt", { session: false }),BlogController.createBlog);
 
-blogRouter.put("/:id", BlogController.updateBlog);
-blogRouter.delete("/:id", BlogController.deleteBlog);
+blogRouter.put("/:id", passport.authenticate("jwt", { session: false }), BlogController.updateBlog);
+blogRouter.delete("/:id", passport.authenticate("jwt", { session: false }), BlogController.deleteBlog);
 
 module.exports = blogRouter;

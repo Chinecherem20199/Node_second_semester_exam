@@ -1,6 +1,7 @@
 const moment = require("moment");
 const {readTime} = require("../read_time");
 const blogModel = require("../models/blog_schema");
+// const { populate } = require("../models/blog_schema");
 // const User = require("../models/user_schema");
 
 exports.createBlog = async (req, res) => {
@@ -12,16 +13,18 @@ exports.createBlog = async (req, res) => {
   // const user = await User.findById(body.userId);
 
   try {
-    const blog = await blogModel.create({
-      title,
-      body,
-      tags,
-      author: req.user._id,
-      description,
-      timestamps: moment().toDate(),
-      read_time: readTime(body),
-      // author:
-    });
+    const blog = await blogModel.create(
+      {
+        title,
+        body,
+        tags,
+        author: req.user._id,
+        description,
+        timestamps: moment().toDate(),
+        read_time: readTime(body),
+        // author:
+      }
+    );
     res.json({
       message: "Blog posted succesfully",
       blog,
@@ -38,8 +41,10 @@ exports.getBlog = async (req, res) => {
     .findById(id)
     // .populate("User")
     .then((blog) => {
+      blog.read_count++
+     blog.save()
       res.status(200).send(blog);
-      blog.read_count +=1
+      
     })
     .catch((err) => {
       console.log(err);
@@ -61,13 +66,15 @@ exports.getBlogs = async (req, res) => {
   const {
     read_count,
     read_time,
+
     timestamps,
     order = "asc",
     order_by = "timestamps",
     author,
     title,
     tags,
-    page = 1,
+    state = "published" ,
+    page = 0,
     per_page = 20,
   } = query;
 
@@ -87,6 +94,9 @@ exports.getBlogs = async (req, res) => {
   if (author) {
     findQuery.author = author;
   }
+  // if (state) {
+  //   findQuery.state = "published";
+  // }
   if (tags) {
     findQuery.tags = tags;
   }
@@ -96,7 +106,11 @@ exports.getBlogs = async (req, res) => {
   }
 
   const sortQuery = {};
-  //  console.log(sortQuery)
+   console.log(sortQuery)
+  // if (state) {
+  //   findQuery.state === "published";
+  //   // match.published = req.query.published === "true";
+  // }
 
   const sortAttribute = order_by.split(",");
   for (const attribute of sortAttribute) {
@@ -111,7 +125,8 @@ exports.getBlogs = async (req, res) => {
   //  const blog = await blogModel.find();
   // return res.json({status: true, blog})
   await blogModel
-    .find(findQuery)
+    .find({findQuery, state})
+    // .populate(state)
     .sort(sortQuery)
     .skip(page)
     .limit(per_page)
@@ -159,6 +174,7 @@ exports.deleteBlog = async (req, res) => {
     .findByIdAndRemove(id)
     .then((blog) => {
       res.status(200).send(blog);
+      
     })
     .catch((err) => {
       console.log(err);

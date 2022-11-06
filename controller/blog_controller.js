@@ -76,13 +76,7 @@ exports.getBlog = async (req, res) => {
       res.status(404).send(err);
     });
 
-  // const {id} = req.params;
-  // const blog = await blogModel.findById(id);
-
-  // if(!blog){
-  //     return res.status(404).json({status: false, blog: null})
-  // }
-  // return res.json({status: true, blog})
+ 
 };
 
 exports.getBlogs = async (req, res) => {
@@ -165,20 +159,6 @@ exports.getBlogs = async (req, res) => {
     });
 };
 
-// exports.updateBlog = async (req, res) => {
-//   const id = req.params.id;
-//   const blog = req.body;
-//   blog.lastUpdateAt = new Date(); // set the lastUpdateAt to the current date
-//   await blogSchema
-//     .findByIdAndUpdate({ _id: id, author: req.user }, blog, { new: true })
-//     .then((newBlog) => {
-//       res.status(200).send(newBlog);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).send(err);
-//     });
-// };
 
 exports.updateBlog = async (req, res) => {
   try {
@@ -199,19 +179,7 @@ exports.updateBlog = async (req, res) => {
   }
 };
 
-// blogRouter.patch('/:id', async(req, res) =>{
-//     const {id} = req.params;
-//     const { state } = req.body;
-//     const blog = await blogModel.findById(id);
-// if(!blog){
-//         return res.status(404).json({status: false, blog: null})
-//     }
-//     blog.state = state;
-//     await blog.save()
 
-//     return res.json({status: true, blog})
-//  }
-// )
 
 exports.deleteBlog = async (req, res) => {
   const id = req.params.id;

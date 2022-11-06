@@ -31,7 +31,7 @@ const UserSchema = new Schema({
   blogs: [
     {
       type: moogoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Blog",
     },
   ],
 });

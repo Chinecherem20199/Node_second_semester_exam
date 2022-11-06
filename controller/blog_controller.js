@@ -1,34 +1,65 @@
 const moment = require("moment");
-const { readTime } = require("../read_time");
+const  readTime  = require("./read_time");
 const blogSchema = require("../models/blog_schema");
+const UserSchema = require('../models/user_schema')
 
-exports.createBlog = async (req, res) => {
-  // const body = req.body;
-  // console.log(body)
+// const readingTime = await readTime.getReadTime(newBlog.body);
+// newBlog.reading_time = readingTime;
 
-  const { title, body, tags, description } = req.body;
-  // const user = await User.findById(body.userId);
 
-  try {
-    const blog = await blogSchema.create({
-      title,
-      body,
-      tags,
-      author: req.user._id,
-      description,
-      timestamps: moment().toDate(),
-      read_time: readTime(body),
-      // author:
-    });
-    res.json({
-      message: "Blog posted succesfully",
-      blog,
-    });
-  } catch (err) {
-    res.send(err.message);
-  }
-  //  console.log(blog)
-};
+//Authorised users should be able to create a blog
+exports.createBlog = async (req,res)=>{
+   try {
+    const newBlog = req.body; 
+
+   //readingTime
+   const readingTime = await readTime.readingTime(newBlog.body);
+   newBlog.read_time = readingTime;   
+
+   const blogCreator = await UserSchema.findOne({_id:req.user._id});
+   newBlog.author = blogCreator;
+   
+
+   await blogSchema.create(newBlog);
+   return res.json({message:"Blog created Successfully"})
+   } catch (error) {
+    res.send(error.message)
+    
+   }
+}
+
+// exports.createBlog = async (req, res) => {
+
+//   const { title, body, tags, description, read_time } = req.body;
+  
+  
+  
+
+//   try {
+//     const readingtime = await readTime.getReadTime(blog.body);
+//     blog.read_time = readingtime;
+    
+//     const blog = await blogSchema.create({
+      
+//       title,
+//       body,
+//       tags,
+//       author: req.user._id,
+//       description,
+//       timestamps: moment().toDate(),
+//       read_time: readTime,
+//       read_time: readTime,
+//       // author:
+//     });
+//     res.json({
+//       message: "Blog posted succesfully",
+//       blog,
+//     });
+//   } catch (err) {
+//     res.send(err.message);
+//   }
+//   //  console.log(blog)
+// };
 exports.getBlog = async (req, res) => {
   const id = req.params.id;
   await blogSchema
@@ -36,6 +67,7 @@ exports.getBlog = async (req, res) => {
     .populate({ path: "author", select: ["firstname", "lastname"] })
     .then((blog) => {
       blog.read_count++;
+      blog.readTime;
       blog.save();
       res.status(200).send(blog);
     })
@@ -119,7 +151,7 @@ exports.getBlogs = async (req, res) => {
   // return res.json({status: true, blog})
   await blogSchema
     .find({ findQuery, state })
-    .populate("author")
+    .populate({ path: "author", select: ["firstname", "lastname"] })
     .sort(sortQuery)
     .skip(page)
     .limit(per_page)
@@ -133,20 +165,40 @@ exports.getBlogs = async (req, res) => {
     });
 };
 
+// exports.updateBlog = async (req, res) => {
+//   const id = req.params.id;
+//   const blog = req.body;
+//   blog.lastUpdateAt = new Date(); // set the lastUpdateAt to the current date
+//   await blogSchema
+//     .findByIdAndUpdate({ _id: id, author: req.user }, blog, { new: true })
+//     .then((newBlog) => {
+//       res.status(200).send(newBlog);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).send(err);
+//     });
+// };
+
 exports.updateBlog = async (req, res) => {
-  const id = req.params.id;
-  const blog = req.body;
-  blog.lastUpdateAt = new Date(); // set the lastUpdateAt to the current date
-  await blogSchema
-    .findByIdAndUpdate(id, blog, { new: true })
-    .then((newBlog) => {
-      res.status(200).send(newBlog);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(err);
-    });
+  try {
+    const { id } = req.params;
+    const { state } = req.body;
+
+    const blog = await blogSchema.findOne({ _id: id });
+
+    if (!blog) {
+      return res.status(404).json({ status: false, blog: null });
+    }
+
+    blog.state = state; //update state
+    await blog.save();
+    return res.json({ status: true, blog });
+  } catch (error) {
+    res.send(error.message);
+  }
 };
+
 // blogRouter.patch('/:id', async(req, res) =>{
 //     const {id} = req.params;
 //     const { state } = req.body;

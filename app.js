@@ -26,7 +26,7 @@ app.use('/', userRoute);
 
 app.get('/', (req, res) => {
     res.status(200)
-    res.send('Welcome to the book API');
+    res.send('Welcome to the Blog API');
 });
 
 app.use(function (err, req, res, next) {

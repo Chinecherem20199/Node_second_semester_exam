@@ -1,30 +1,25 @@
 const moment = require("moment");
-const {readTime} = require("../read_time");
-const blogModel = require("../models/blog_schema");
-// const { populate } = require("../models/blog_schema");
-// const User = require("../models/user_schema");
+const { readTime } = require("../read_time");
+const blogSchema = require("../models/blog_schema");
 
 exports.createBlog = async (req, res) => {
-
   // const body = req.body;
   // console.log(body)
-  
+
   const { title, body, tags, description } = req.body;
   // const user = await User.findById(body.userId);
 
   try {
-    const blog = await blogModel.create(
-      {
-        title,
-        body,
-        tags,
-        author: req.user._id,
-        description,
-        timestamps: moment().toDate(),
-        read_time: readTime(body),
-        // author:
-      }
-    );
+    const blog = await blogSchema.create({
+      title,
+      body,
+      tags,
+      author: req.user._id,
+      description,
+      timestamps: moment().toDate(),
+      read_time: readTime(body),
+      // author:
+    });
     res.json({
       message: "Blog posted succesfully",
       blog,
@@ -33,18 +28,16 @@ exports.createBlog = async (req, res) => {
     res.send(err.message);
   }
   //  console.log(blog)
- 
 };
 exports.getBlog = async (req, res) => {
   const id = req.params.id;
-  await blogModel
+  await blogSchema
     .findById(id)
-    // .populate("User")
+    .populate({ path: "author", select: ["firstname", "lastname"] })
     .then((blog) => {
-      blog.read_count++
-     blog.save()
+      blog.read_count++;
+      blog.save();
       res.status(200).send(blog);
-      
     })
     .catch((err) => {
       console.log(err);
@@ -73,7 +66,7 @@ exports.getBlogs = async (req, res) => {
     author,
     title,
     tags,
-    state = "published" ,
+    state = "published",
     page = 0,
     per_page = 20,
   } = query;
@@ -106,7 +99,7 @@ exports.getBlogs = async (req, res) => {
   }
 
   const sortQuery = {};
-   console.log(sortQuery)
+  console.log(sortQuery);
   // if (state) {
   //   findQuery.state === "published";
   //   // match.published = req.query.published === "true";
@@ -124,9 +117,9 @@ exports.getBlogs = async (req, res) => {
 
   //  const blog = await blogModel.find();
   // return res.json({status: true, blog})
-  await blogModel
-    .find({findQuery, state})
-    // .populate(state)
+  await blogSchema
+    .find({ findQuery, state })
+    .populate("author")
     .sort(sortQuery)
     .skip(page)
     .limit(per_page)
@@ -144,7 +137,7 @@ exports.updateBlog = async (req, res) => {
   const id = req.params.id;
   const blog = req.body;
   blog.lastUpdateAt = new Date(); // set the lastUpdateAt to the current date
-  await blogModel
+  await blogSchema
     .findByIdAndUpdate(id, blog, { new: true })
     .then((newBlog) => {
       res.status(200).send(newBlog);
@@ -170,11 +163,10 @@ exports.updateBlog = async (req, res) => {
 
 exports.deleteBlog = async (req, res) => {
   const id = req.params.id;
-  await blogModel
+  await blogSchema
     .findByIdAndRemove(id)
     .then((blog) => {
       res.status(200).send(blog);
-      
     })
     .catch((err) => {
       console.log(err);

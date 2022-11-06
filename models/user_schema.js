@@ -28,7 +28,7 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  blog: [
+  blogs: [
     {
       type: moogoose.Schema.Types.ObjectId,
       ref: "User",

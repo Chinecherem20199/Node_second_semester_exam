@@ -13,7 +13,7 @@ res.json({
 exports.login = (req, res, { err, user, info}) => {
 
     if (!user) {
-        return res.json({ message: 'email or password is incorrect'})
+        return res.status(400).json({ message: 'email or password is incorrect'})
     }
 
     // req.login is provided by passport

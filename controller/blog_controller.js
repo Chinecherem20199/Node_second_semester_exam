@@ -128,39 +128,51 @@ exports.getBlogs = async (req, res) => {
 };
 
 
-exports.updateBlog = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { state } = req.body;
-
-    const blog = await blogSchema.findOne({ _id: id });
-
-    if (!blog) {
-      return res.status(404).json({ status: false, blog: null });
-    }
-
-    blog.state = state; //update state
-    await blog.save();
-    return res.json({ status: true, blog });
-  } catch (error) {
-    res.send(error.message);
-  }
-};
 
 
+// exports.updateBlog = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { state } = req.body;
 
-exports.deleteBlog = async (req, res) => {
-  const id = req.params.id;
-  await blogSchema
-    .findByIdAndRemove(id)
-    .then((blog) => {
-      res.status(200).send(blog);
+//     const blog = await blogSchema.findOne({ _id: id });
+
+//     if (!blog) {
+//       return res.status(404).json({ status: false, blog: null });
+//     }
+
+//     blog.state = state; //update state
+//     await blog.save();
+//     return res.json({ status: true, blog });
+//   } catch (error) {
+//     res.send(error.message);
+//   }
+// };
+exports.updateBlog = (req, res) => {
+  const blog = new blogSchema({
+    _id: req.params.id,
+    title: req.body.title,
+    description: req.body.description,
+    body: req.body.body,
+    state: req.body.state,
+    tags: req.body.tags,
+  });
+  blogSchema
+    .updateOne({ _id: req.params.id }, blog)
+    .then(() => {
+      res.status(201).json({
+        message: "Blog updated successfully!", blog
+      });
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send(err);
+    .catch((error) => {
+      res.status(400).json({
+        error: error,
+      });
     });
 };
+
+
+
 exports.deleteBlog = async(req, res) =>{
   try {
     const {id} = req.params;

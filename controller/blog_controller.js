@@ -21,45 +21,13 @@ exports.createBlog = async (req,res)=>{
    
 
    await blogSchema.create(newBlog);
-   return res.json({message:"Blog created Successfully"})
+   return res.json({message:"Blog created Successfully", newBlog})
    } catch (error) {
     res.send(error.message)
     
    }
 }
 
-// exports.createBlog = async (req, res) => {
-
-//   const { title, body, tags, description, read_time } = req.body;
-  
-  
-  
-
-//   try {
-//     const readingtime = await readTime.getReadTime(blog.body);
-//     blog.read_time = readingtime;
-    
-//     const blog = await blogSchema.create({
-      
-//       title,
-//       body,
-//       tags,
-//       author: req.user._id,
-//       description,
-//       timestamps: moment().toDate(),
-//       read_time: readTime,
-//       read_time: readTime,
-//       // author:
-//     });
-//     res.json({
-//       message: "Blog posted succesfully",
-//       blog,
-//     });
-//   } catch (err) {
-//     res.send(err.message);
-//   }
-//   //  console.log(blog)
-// };
 exports.getBlog = async (req, res) => {
   const id = req.params.id;
   await blogSchema
@@ -193,3 +161,12 @@ exports.deleteBlog = async (req, res) => {
       res.status(500).send(err);
     });
 };
+exports.deleteBlog = async(req, res) =>{
+  try {
+    const {id} = req.params;
+    const blog = await blogSchema.deleteOne({_id:id});
+    return res.status(200).json({message: "Deleted Succesfully", blog});
+  } catch (error) {
+    res.send(error.message)
+  }
+}

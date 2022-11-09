@@ -18,7 +18,7 @@ const BlogSchema = new Schema({
   state: {
     type: String,
     enum: ["draft", "published"],
-    default: "draft",
+    default: "published",
   },
   read_count: { type: Number, default: 0 },
   author: {

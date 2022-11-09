@@ -136,7 +136,7 @@ Anybody can get single blog
 
 #### Delete Blog By ID
 - Route: /blogs/:id
-- Method: PUT
+- Method: DELETE
 - Header  - Authorization: Bearer {token}
 - Body:
 - Responses

@@ -13,14 +13,12 @@ app.use('/blogs', blogsRoute);
 app.use('/', userRoute);
 
 app.get('/', (req, res) => {
-    res.status(200);
-    res.send('Welcome to the Blog API');
+    console.log(res)
+    res.status(200).json({ message: 'Welcome to the Blog API' });
 });
 
-app.use(function (err, req, res, next) {
-    console.log(err);
-    res.status(err.status || 500);
-    res.json({ error: err.message });
+app.use('*', (req, res) => {
+    return res.status(404).json({ message: 'Route not found' });
 });
 
 

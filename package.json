@@ -1,30 +1,40 @@
 {
-  "name": "bloggingAPI",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "jest",
-    "start:dev": "nodemon app"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcrypt": "^5.1.0",
-    "body-parser": "^1.20.1",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "jest": "^29.2.2",
-    "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.4",
-    "mongoose": "^6.7.0",
-    "nodemon": "^2.0.20",
-    "passport": "^0.6.0",
-    "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^7.1.2",
-    "supertest": "^6.3.1"
-  }
+    "name": "bloggingapi",
+    "version": "1.0.0",
+    "description": "1. User should be able to register\r 2. User should be able to login with Passport using JWT\r 3. Anybody can get all the blogs and also a single blog\r 4. Users should be able to create blog\r 5. Users should be able to update and delete blog\r 6. only published blog can view by users\r 7. only users can update from draft to publish state",
+    "main": "app.js",
+    "scripts": {
+        "test": "jest --detectOpenHandles",
+        "start:dev": "nodemon app"
+    },
+    "keywords": [],
+    "author": "Chinecherem",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "body-parser": "^1.20.1",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "express-session": "^1.17.3",
+        "jest": "^29.3.1",
+        "jsonwebtoken": "^8.5.1",
+        "moment": "^2.29.4",
+        "mongoose": "^6.7.0",
+        "passport": "^0.6.0",
+        "passport-jwt": "^4.0.0",
+        "passport-local": "^1.0.0",
+        "passport-local-mongoose": "^7.1.2",
+        "supertest": "^6.3.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Chinecherem20199/Node_second_semester_exam.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Chinecherem20199/Node_second_semester_exam/issues"
+    },
+    "homepage": "https://github.com/Chinecherem20199/Node_second_semester_exam#readme",
+    "devDependencies": {
+        "nodemon": "^2.0.20"
+    }
 }

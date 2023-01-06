@@ -5,31 +5,40 @@ const Schema = moogoose.Schema;
 
 //Define Blog schema
 const BlogSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  body: {
-    type: String,
-    required: true,
-  },
+    title: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    body: {
+        type: String,
+        required: true
+    },
 
-  state: {
-    type: String,
-    enum: ["draft", "published"],
-    default: "published",
-  },
-  read_count: { type: Number, default: 0 },
-  author: {
-    type: moogoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  description: String,
+    state: {
+        type: String,
+        enum: ['draft', 'published'],
+        default: 'draft'
+    },
+    read_count: { type: Number, default: 0 },
+    author: {
+        type: moogoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    description: String,
 
-  read_time: Number,
-  tags: [String],
-  timestamps: Date,
+    read_time: Number,
+    tags: [String],
+     timestamps: Date
+
+    // createdAt: {
+    //     type: Date,
+    //     default: Date.now()
+    // },
+    // updatedAt: {
+    //     type: Date,
+    //     default: Date.now()
+    // }
 });
 
 // Export the model

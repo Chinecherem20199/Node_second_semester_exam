@@ -4,7 +4,7 @@ require("dotenv").config();
 
 exports.signUp = async (req, res) => {
 console.log(req.body)
-res.json({
+return res.status(201).json({
   message: "Sign Up Succesfully.",
   user: req.user
 })
